@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+.active{
+    @apply bg-blue-500 text-white
+}
+.active svg {
+    @apply fill-white 
+}
