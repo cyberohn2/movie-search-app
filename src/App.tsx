@@ -47,22 +47,15 @@ function App() {
               path="/upcoming"
               element={
                 <MovieList
-                  details={{ listName: "Upcoming Movies", listType: "upcoming" }}
+                  details={{
+                    listName: "Upcoming Movies",
+                    listType: "upcoming",
+                  }}
                 />
               }
             />
-            <Route
-              path="/movie"
-              element={
-                <MovieDetails />
-              }
-            />
-            <Route
-              path="/search"
-              element={
-                <SearchPage />
-              }
-            />
+            <Route path="/movie/:id" element={<MovieDetails />} />
+            <Route path="/search" element={<SearchPage />} />
             <Route path="*" element={<div>Not found</div>} />
           </Route>
         </Routes>

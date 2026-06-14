@@ -1,20 +1,17 @@
-import { Outlet } from 'react-router-dom' 
-import Sidebar from './sidebar'
-import { SearchProvider } from '../contexts/search-context'
+import { Outlet } from "react-router-dom";
+import Sidebar from "./sidebar";
 
 const Layout = () => {
   return (
-    <div className='grid grid-cols-5 md:grid-cols-4 h-screen overflow-y-hidden'>
-      <aside className="sidebar ">
+    <div className="grid grid-cols-5 md:grid-cols-4 h-screen">
+      <aside className="sidebar">
         <Sidebar />
       </aside>
-      <SearchProvider >
-        <main className='col-start-2 col-span-4 p-6 overflow-y-scroll'>
-          <Outlet />
-        </main>
-      </SearchProvider>
+      <main className="col-start-2 col-span-4 p-6 overflow-y-auto h-screen">
+        <Outlet />
+      </main>
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

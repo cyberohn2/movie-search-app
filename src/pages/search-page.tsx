@@ -1,34 +1,41 @@
 import { useQuery } from "@tanstack/react-query";
-import { searchApi } from "../utils/api";
-import MovieSkeleton from "../components/movie-skeleton";
-import MovieCard from "../components/movie-card";
 import { useSearchParams } from "react-router-dom";
+import MovieCard from "../components/movie-card";
 import Search from "../components/search";
+import { ErrorState, EmptyState, LoadingGrid } from "../components/states";
+import type { Movie } from "../types/movie";
+import { searchMovies } from "../api/movies";
 
 const SearchPage = () => {
-    const [params] = useSearchParams()
-    const query = params.get("query")
-    
-    const { data, isLoading, isError } = useQuery({
-      queryKey: [query],
-      // tmdb only supports year query filter. ref: https://developer.themoviedb.org/reference/search-movie So we'll only be adding that
-      queryFn: () => searchApi.get(`${query}`).then((res) => res.data.results),
-    });
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get("query") ?? "";
+  const year = searchParams.get("year") ?? "";
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["search", query],
+    queryFn: () => searchMovies(query, year),
+  });
 
   return (
     <div>
-        <Search />
+      <Search />
       {isError ? (
-        <p>Error While fetching movies!</p>
+        <ErrorState message="Error while fetching movies. Please try again." />
+      ) : isLoading ? (
+        <LoadingGrid />
+      ) : data?.length === 0 ? (
+        <EmptyState
+          message={
+            query
+              ? `No results found for "${query}".`
+              : "No movies found with the selected filters."
+          }
+        />
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 mt-6">
-          {isLoading
-            ? Array.from({ length: 10 }).map((_, index) => (
-                <MovieSkeleton key={index} />
-              ))
-            : data?.map((data: any) => {
-                return <MovieCard movieDetails={data} key={data.id} />;
-              })}
+          {data?.map((movie: Movie) => (
+            <MovieCard movieDetails={movie} key={movie.id} />
+          ))}
         </div>
       )}
     </div>
